@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'grape'
+require 'grape-swagger'
 require './environments'
 
 class Post < ActiveRecord::Base
@@ -9,13 +10,16 @@ end
 class API < Grape::API
   version 'v1'
   format :json
-  prefix :api
+  prefix 'api'
 
   resource :posts do
+    desc 'Returns all posts.'
     get '/' do
       Post.order("created_at DESC")
     end
   end
+
+  add_swagger_documentation api_version: 'v1'
 end
 
 class Web < Sinatra::Base
