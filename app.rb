@@ -16,6 +16,14 @@ class API < Grape::API
     get '/' do
       Post.order("created_at DESC")
     end
+
+    desc "Returns a single post."
+    params do
+      requires :id, type: Integer, desc: "Post id."
+    end
+    get '/:id' do
+      Post.find(params[:id])
+    end
   end
 
   add_swagger_documentation api_version: 'v1'
