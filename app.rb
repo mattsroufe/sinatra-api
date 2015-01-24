@@ -2,7 +2,6 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require 'grape'
 require 'grape-swagger'
-require './environments'
 
 class Post < ActiveRecord::Base
 end
