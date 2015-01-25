@@ -42,7 +42,13 @@ end
 
 class Web < Sinatra::Base
 
+  helpers do
+    def server_url
+      [request.host, request.port].join(':')
+    end
+  end
+
   get "/apidocs" do
-    File.read(File.join('public', 'index.html'))
+    erb :index
   end
 end
