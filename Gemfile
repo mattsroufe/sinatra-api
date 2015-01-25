@@ -8,7 +8,3 @@ gem 'pg'
 gem 'grape'
 gem 'grape-swagger'
 gem 'rack-cors'
-
-group :development do
- gem 'tux'
-end
