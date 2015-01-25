@@ -3,7 +3,8 @@ require 'sinatra/activerecord'
 require 'grape'
 require 'grape-swagger'
 
-class Post < ActiveRecord::Base
+class Customer < ActiveRecord::Base
+  self.table_name = 'customer'
 end
 
 class API < Grape::API
@@ -11,18 +12,18 @@ class API < Grape::API
   format :json
   prefix 'api'
 
-  resource :posts do
-    desc 'Returns all posts.'
+  resource :customers do
+    desc 'Returns all customers.'
     get '/' do
-      Post.order("created_at DESC")
+      Customer.all
     end
 
-    desc "Returns a single post."
+    desc "Returns a single customer."
     params do
-      requires :id, type: Integer, desc: "Post id."
+      requires :id, type: Integer, desc: "Customer id."
     end
     get '/:id' do
-      Post.find(params[:id])
+      Customer.find(params[:id])
     end
   end
 
