@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require 'grape'
 require 'grape-swagger'
+require 'grape-entity'
 require './lib/bank'
 
 module Bank
@@ -13,7 +14,7 @@ module Bank
     mount Accounts
     mount Customers
 
-    add_swagger_documentation api_version: 'v1'
+    add_swagger_documentation api_version: 'v1', hide_format: true
   end
 
   class Web < Sinatra::Base
