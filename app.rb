@@ -1,32 +1,29 @@
+require 'byebug'
 require 'sinatra'
 require 'sinatra/activerecord'
-require 'grape'
-require 'grape-swagger'
-require 'grape-entity'
 require './lib/bank'
 
-module Bank
-  class API < Grape::API
-    version 'v1'
-    format :json
-    prefix 'api'
+before do
+  content_type 'application/json'
+  response['Access-Control-Allow-Origin'] = '*'
+end
 
-    mount Accounts
-    mount Customers
+get '/api/v1/accounts' do
+  Account.all.to_json
+end
 
-    add_swagger_documentation api_version: 'v1', hide_format: true
-  end
+get '/api/v1/accounts/:id' do
+  Account.find(params[:id]).to_json
+end
 
-  class Web < Sinatra::Base
+get '/api/v1/customers' do
+  Customer.all.to_json
+end
 
-    helpers do
-      def server_url
-        [request.host, request.port].join(':')
-      end
-    end
+post '/api/v1/customers' do
+  Customer.new(params).to_json
+end
 
-    get "/apidocs" do
-      erb :index
-    end
-  end
+get '/api/v1/employees' do
+  Employee.all.to_json
 end
