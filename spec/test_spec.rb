@@ -7,7 +7,7 @@ require 'rack/test'
 include Rack::Test::Methods
 
 def app
-  Sinatra::Application
+  Bank
 end
 
 describe "customers" do

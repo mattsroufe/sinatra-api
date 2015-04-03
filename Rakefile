@@ -5,6 +5,9 @@ task(:test) do
   Dir['./spec/**/*_spec.rb'].each { |f| load f }
 end
 
+require './app'
+require 'sinatra/activerecord/rake'
+
 __END__
 
 require 'rake/testtask'
