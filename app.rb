@@ -1,29 +1,41 @@
 require 'byebug'
 require 'sinatra'
+require 'sinatra/json'
+require 'sinatra/namespace'
 require 'sinatra/activerecord'
 require './lib/bank'
 
 before do
-  content_type 'application/json'
   response['Access-Control-Allow-Origin'] = '*'
 end
 
-get '/api/v1/accounts' do
-  Account.all.to_json
-end
+namespace '/api' do
+  namespace '/v1' do
+    get '/accounts' do
+      json Account.all
+    end
 
-get '/api/v1/accounts/:id' do
-  Account.find(params[:id]).to_json
-end
+    get '/accounts/:id' do
+      json Account.find(params[:id])
+    end
 
-get '/api/v1/customers' do
-  Customer.all.to_json
-end
+    get '/customers' do
+      json Customer.all
+    end
 
-post '/api/v1/customers' do
-  Customer.new(params).to_json
-end
+    post '/customers' do
+      customer = Customer.new(params)
+      if customer.save
+        status 201
+        json customer
+      else
+        status 400
+        json({ :errors => customer.errors.full_messages })
+      end
+    end
 
-get '/api/v1/employees' do
-  Employee.all.to_json
+    get '/employees' do
+      json Employee.all
+    end
+  end
 end

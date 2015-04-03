@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
-ruby "2.1.5"
+ruby '2.1.5'
 
-gem 'sinatra'
+gem 'sinatra', '1.4.6'
+gem 'sinatra-contrib'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'pg', group: :production
