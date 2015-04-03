@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'byebug'
 require 'sinatra/base'
 require 'sinatra/contrib'
 require 'sinatra/activerecord'
