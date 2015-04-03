@@ -1,4 +1,4 @@
 # needed for Heroku
 
 require './app'
-run Bank
+run Bank.new
