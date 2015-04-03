@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'byebug'
 require 'sinatra'
 require 'sinatra/json'
@@ -30,7 +32,7 @@ namespace '/api' do
         json customer
       else
         status 400
-        json({ :errors => customer.errors.full_messages })
+        json({ errors: customer.errors.full_messages })
       end
     end
 
