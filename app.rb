@@ -1,14 +1,18 @@
 require 'rubygems'
-require 'bundler/setup'
+Bundler.require :default
 require 'sinatra/base'
 require 'sinatra/contrib'
 require 'sinatra/activerecord'
 require './lib/bank'
 
+
 class Bank < Sinatra::Base
   register Sinatra::Contrib
+  set :active_model_serializers, { root: false }
+  set :serializers_path, './lib/bank/serializers'
 
   before do
+    content_type 'application/vnd.api+json'
     response['Access-Control-Allow-Origin'] = '*'
   end
 
