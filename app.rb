@@ -3,24 +3,10 @@ require 'bundler/setup'
 require 'sinatra/base'
 require 'sinatra/contrib'
 require 'sinatra/activerecord'
-require './config/environments'
 require './lib/bank'
 
 class Bank < Sinatra::Base
   register Sinatra::Contrib
-
-  configure :production do
-    db = URI.parse(ENV['DATABASE_URL'] || 'postgres:///localhost/mydb')
-
-    ActiveRecord::Base.establish_connection(
-      :adapter  => db.scheme == 'postgres' ? 'postgresql' : db.scheme,
-      :host     => db.host,
-      :username => db.user,
-      :password => db.password,
-      :database => db.path[1..-1],
-      :encoding => 'utf8'
-    )
-  end
 
   before do
     response['Access-Control-Allow-Origin'] = '*'
