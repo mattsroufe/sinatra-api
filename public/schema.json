@@ -11,9 +11,9 @@
         "open_branch_id":     { "type": "integer" },
         "open_emp_id":        { "type": "integer" },
         "product_cd":         { "type": "string" },
-        "open_date":          { "type": "integer" },
-        "close_date":         { "type": "integer" },
-        "last_activity_date": { "type": "integer" },
+        "open_date":          { "$ref": "#/definitions/date" },
+        "close_date":         { "$ref": "#/definitions/date" },
+        "last_activity_date": { "$ref": "#/definitions/date" },
         "avail_balance":      { "type": "number" },
         "pending_balance":    { "type": "number" },
         "status":             { "type": "string" },
@@ -33,6 +33,10 @@
         "postal_code":  { "type": "string" }
       },
       "additionalProperties": false
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(1[0-2]|0[1-9])-(0[1-9]|[1-2][0-9]|3[0-1])$"
     }
   },
 
