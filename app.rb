@@ -55,13 +55,17 @@ class Bank < Sinatra::Base
     resource, id = params['captures'][0].split('/')
     klass = resource[0...-1].capitalize.constantize
 
+    request.body.rewind
+    request_body = MultiJson.decode request.body.read
+
 # this works so far
 # http://localhost:5000/api/v1/accounts/1?include=customer,product.product_type&fields[product_types]=name&fields[products]=product_type_cd&fields[accounts]=product_cd,open_date&fields[customers]=city,address
 
     if id.present?
       object = klass.find(id)
       data = {type: resource, id: object.id}
-      object_attributes = params[:fields][resource].to_s.split(',')
+      object_attributes = request_body['fields'][resource]
+      # object_attributes = params[:fields][resource].to_s.split(',')
       object_attributes.each do |attr|
         (data[:attributes] ||= {})[attr] = object.send(attr)
       end
@@ -92,6 +96,7 @@ class Bank < Sinatra::Base
   end
 
   get '/*' do
+    # curl -X GET http://localhost:5000/accounts/1 -H "Content-Type: application/json" -d '{"fields": {"accounts": ["id", "product_cd"]}}'
     json handle
   end
 
