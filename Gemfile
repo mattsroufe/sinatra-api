@@ -7,8 +7,10 @@ gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'pg', group: :production
 gem 'mysql2', group: [:development, :test]
+gem 'committee'
 
 group :development do
+  gem 'prmd'
   gem 'byebug'
   gem 'tux'
 end

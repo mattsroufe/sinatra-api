@@ -22,6 +22,10 @@
       "required": ["customer_id", "open_date"],
       "additionalProperties": false
     },
+    "accounts": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/account" }
+    },
     "customer": {
       "type": "object",
       "properties": {
@@ -34,6 +38,10 @@
       },
       "additionalProperties": false
     },
+    "customers": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/customer" }
+    },
     "date": {
       "type": "string",
       "pattern": "^[0-9]{4}-(1[0-2]|0[1-9])-(0[1-9]|[1-2][0-9]|3[0-1])$"
@@ -41,13 +49,8 @@
   },
 
   "properties": {
-    "accounts": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/account" }
-    },
-    "customers": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/customer" }
-    }
-  }
+    "accounts": { "$ref": "#/definitions/accounts" },
+    "customers": { "$ref": "#/definitions/customers" }
+  },
+  "additionalProperties": false
 }

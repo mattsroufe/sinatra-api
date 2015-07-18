@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/hyper-schema",
+  "definitions": {
+    "account": {
+      "$schema": "http://json-schema.org/draft-04/hyper-schema",
+      "description": "A bank account.",
+      "title": "Account",
+      "type": [
+        "object"
+      ],
+      "links": [
+        {
+          "description": "Info for existing account.",
+          "href": "/accounts/{id}",
+          "method": "GET",
+          "rel": "self",
+          "title": "Info"
+        }
+      ],
+      "properties": {
+        "id":                 { "type": "integer" },
+        "customer_id":        { "type": "integer" },
+        "open_branch_id":     { "type": "integer" },
+        "open_emp_id":        { "type": "integer" },
+        "product_cd":         { "type": "string" },
+        "avail_balance":      { "type": "number" },
+        "pending_balance":    { "type": "number" },
+        "status":             { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    "account": {
+      "$ref": "#/definitions/account"
+    }
+  },
+  "type": [
+    "object"
+  ],
+  "description": "A schema for an example bank API.",
+  "links": [
+    {
+      "href": "http://localhost:5000",
+      "rel": "self"
+    }
+  ],
+  "title": "SinatraAPI"
+}
