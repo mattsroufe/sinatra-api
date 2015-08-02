@@ -51,12 +51,11 @@ class Bank < Sinatra::Base
     #   id       = req.delete_at(-1).to_i if req.last.to_i > 0
     #   klass = req.last[0...-1].capitalize.constantize
     # end
-
     resource, id = params['captures'][0].split('/')
     klass = resource[0...-1].capitalize.constantize
 
     request.body.rewind
-    request_body = MultiJson.decode request.body.read
+    request_body = ENV["RACK_ENV"] == 'test' ? params : MultiJson.decode(request.body.read)
 
 # this works so far
 # http://localhost:5000/api/v1/accounts/1?include=customer,product.product_type&fields[product_types]=name&fields[products]=product_type_cd&fields[accounts]=product_cd,open_date&fields[customers]=city,address
@@ -91,8 +90,11 @@ class Bank < Sinatra::Base
       data = []
     end
 
-    # require 'byebug'; byebug
     data
+  end
+
+  get '/schema' do
+    json SCHEMA
   end
 
   get '/*' do
