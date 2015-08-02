@@ -1,10 +1,9 @@
 require 'rubygems'
-require "committee"
+require 'committee'
 require 'multi_json'
-require "securerandom"
+require 'securerandom'
 require 'bundler/setup'
 require 'sinatra/base'
-require 'sinatra/contrib'
 require 'sinatra/activerecord'
 require './lib/bank'
 
@@ -21,22 +20,10 @@ end
 class Bank < Sinatra::Base
   SCHEMA = MultiJson.decode(File.read("schema2.json"))
 
-  register Sinatra::Contrib
-
-  set :json_content_type, 'application/vnd.api+json'
-  # set :json_encoder, Serializer
-
   use Committee::Middleware::RequestValidation, schema: SCHEMA, strict: true
 
-  def self.current_path
-    @@current_path
-  end
-
-  def self.current_query_string
-    @@current_query_string
-  end
-
   before do
+    content_type 'application/json'
     response['Access-Control-Allow-Origin'] = '*'
   end
 
@@ -45,7 +32,7 @@ class Bank < Sinatra::Base
     schema_object = schema_link.parent
 
     resource, id = params['captures'][0].split('/')
-    klass = resource[0...-1].capitalize.constantize
+    klass = schema_object.title.constantize
 
     request.body.rewind
     request_body = ENV["RACK_ENV"] == 'test' ? params : MultiJson.decode(request.body.read)
@@ -87,12 +74,12 @@ class Bank < Sinatra::Base
   end
 
   get '/schema' do
-    json SCHEMA
+    MultiJson.encode SCHEMA
   end
 
   get '/*' do
     # curl -X GET http://localhost:5000/accounts/1 -H "Content-Type: application/json" -d '{"fields": {"accounts": ["id", "product_cd"]}}'
-    json handle
+    MultiJson.encode handle
   end
 
   # namespace '/api' do
