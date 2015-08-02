@@ -37,20 +37,13 @@ class Bank < Sinatra::Base
   end
 
   before do
-    BASE_URL ||= request.base_url
-    @@current_path = request.path
-    @@current_query_string = request.query_string
     response['Access-Control-Allow-Origin'] = '*'
   end
 
   def handle
-    # klass = nil
-    # id = nil
+    schema_link = request.env[:link] # link object from committee gem
+    schema_object = schema_link.parent
 
-    # request.path.split('/').tap do |req|
-    #   id       = req.delete_at(-1).to_i if req.last.to_i > 0
-    #   klass = req.last[0...-1].capitalize.constantize
-    # end
     resource, id = params['captures'][0].split('/')
     klass = resource[0...-1].capitalize.constantize
 
