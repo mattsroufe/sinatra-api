@@ -1,7 +1,3 @@
-require 'rubygems'
-require 'securerandom'
-require 'bundler/setup'
-require 'sinatra/base'
 require 'sinatra/activerecord'
 require './lib/bank'
 
@@ -20,24 +16,26 @@ class Bank < Sinatra::Base
     Account.find(params[:id]).to_json
   end
 
-  # get '/customers' do
-  #   json Customer.all
-  # end
+  get '/customers' do
+    Customer.all.to_json
+  end
 
-  # post '/customers' do
-  #   customer = Customer.new(params)
-  #   if customer.save
-  #     status 201
-  #     json customer
-  #   else
-  #     status 400
-  #     json({ errors: customer.errors.full_messages })
-  #   end
-  # end
+  get '/customers/:id' do
+    Customer.find(params[:id]).to_json
+  end
 
-  # get '/employees' do
-  #   json Employee.all
-  # end
+  post '/customers' do
+    customer = Customer.new(params)
+    if customer.save
+      status 201
+      customer.to_json
+    else
+      status 400
+      { errors: customer.errors.full_messages }.to_json
+    end
+  end
 
-  run! if __FILE__ == $0
+  get '/employees' do
+    Employee.all.to_json
+  end
 end

@@ -1,6 +1,4 @@
-require_relative './bank/serializer'
 require_relative './bank/models/account'
-require_relative './bank/serializers/account_serializer'
 require_relative './bank/models/customer'
 require_relative './bank/models/product'
 require_relative './bank/models/product_type'
