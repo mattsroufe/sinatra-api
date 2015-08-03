@@ -1,7 +1,8 @@
+require 'sinatra'
 require 'sinatra/activerecord'
 require './lib/bank'
 
-class Bank < Sinatra::Base
+class Bank < Sinatra::Application
 
   before do
     content_type 'application/json'
@@ -9,33 +10,39 @@ class Bank < Sinatra::Base
   end
 
   get '/accounts' do
-    Account.all.to_json
+    json Account.all
   end
 
   get '/accounts/:id' do
-    Account.find(params[:id]).to_json
+    json Account.find(params[:id])
   end
 
   get '/customers' do
-    Customer.all.to_json
+    json Customer.all
   end
 
   get '/customers/:id' do
-    Customer.find(params[:id]).to_json
+    json Customer.find(params[:id])
   end
 
   post '/customers' do
     customer = Customer.new(params)
     if customer.save
       status 201
-      customer.to_json
+      json customer
     else
       status 400
-      { errors: customer.errors.full_messages }.to_json
+      json({ errors: customer.errors.full_messages })
     end
   end
 
   get '/employees' do
-    Employee.all.to_json
+    json Employee.all
+  end
+
+  helpers do
+    def json(obj)
+      obj.to_json
+    end
   end
 end
