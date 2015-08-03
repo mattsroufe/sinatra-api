@@ -7,10 +7,8 @@ gem 'sinatra-activerecord'
 gem 'rake'
 gem 'pg', group: :production
 gem 'mysql2', group: [:development, :test]
-gem 'committee', github: 'mattsroufe/committee', branch: 'master'
 
 group :development do
-  gem 'prmd'
   gem 'byebug'
   gem 'tux'
 end

@@ -7,10 +7,3 @@ end
 
 require './app'
 require 'sinatra/activerecord/rake'
-
-__END__
-
-require 'rake/testtask'
-Rake::TestTask.new do |t|
-  t.pattern = "spec/*_spec.rb"
-end
