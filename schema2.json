@@ -6,9 +6,7 @@
       "description": "A bank account.",
       "strictProperties": true,
       "title": "Account",
-      "type": [
-        "object"
-      ],
+      "type": "object",
       "links": [
         {
           "description": "Info for existing account.",
@@ -29,21 +27,19 @@
                     "uniqueItems": true
                   }
                 },
-                "strictProperties": true
+                "additionalProperties": false
               }
             },
-            "required": ["fields"],
-            "strictProperties": true,
-            "type": [
-              "object"
-            ]
+            "required": [],
+            "additionalProperties": false,
+            "type": "object"
           },
           "title": "Info"
         }
       ],
       "properties": {
         "id":                 { "type": "integer" },
-        "customer_id":        { "type": "integer" },
+        "cust_id":            { "type": "integer" },
         "open_branch_id":     { "type": "integer" },
         "open_emp_id":        { "type": "integer" },
         "product_cd":         { "type": "string" },

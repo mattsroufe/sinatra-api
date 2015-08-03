@@ -35,7 +35,8 @@ class Bank < Sinatra::Base
     klass = schema_object.title.constantize
 
     request.body.rewind
-    request_body = ENV["RACK_ENV"] == 'test' ? params : MultiJson.decode(request.body.read)
+    request_body = request.body.read
+    request_body = request_body.present? ? MultiJson.decode(request_body) : params
 
 # this works so far
 # http://localhost:5000/api/v1/accounts/1?include=customer,product.product_type&fields[product_types]=name&fields[products]=product_type_cd&fields[accounts]=product_cd,open_date&fields[customers]=city,address
@@ -43,11 +44,17 @@ class Bank < Sinatra::Base
     if id.present?
       object = klass.find(id)
       data = {type: resource, id: object.id}
-      object_attributes = request_body['fields'][resource]
-      # object_attributes = params[:fields][resource].to_s.split(',')
+
+      if request_body['fields']
+        object_attributes = fields = request_body['fields'][resource]
+      else
+        object_attributes = schema_object.properties.keys
+      end
+
       object_attributes.each do |attr|
         (data[:attributes] ||= {})[attr] = object.send(attr)
       end
+
       included = params[:include].to_s.split(',')
       included.each do |include|
         relationships = include.split('.')
