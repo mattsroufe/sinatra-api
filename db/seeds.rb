@@ -1,3 +1,5 @@
+Customer.delete_all
+
 Customer.create!(fed_id: '111-11-1111', cust_type_cd: 'I', address: '47 Mockingbird Ln', city: 'Lynnfield', state: 'MA', postal_code: '01940')
 Customer.create!(fed_id: '222-22-2222', cust_type_cd: 'I', address: '372 Clearwater Blvd', city: 'Woburn', state: 'MA', postal_code: '01801')
 Customer.create!(fed_id: '333-33-3333', cust_type_cd: 'I', address: '18 Jessup Rd', city: 'Quincy', state: 'MA', postal_code: '02169')

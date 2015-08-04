@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'sinatra/activerecord'
-require 'byebug'
+require 'byebug' unless ENV['RACK_ENV'] == 'production'
 require './lib/bank'
 
 class Bank < Sinatra::Application
