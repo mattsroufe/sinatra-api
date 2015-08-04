@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'byebug'
 require './lib/bank'
 
 class Bank < Sinatra::Application
@@ -10,11 +11,18 @@ class Bank < Sinatra::Application
   end
 
   get '/accounts' do
-    json Account.all
+    json Account.all.include_customer_and_product_type.as_json(root: true)
   end
 
   get '/accounts/:id' do
-    json Account.find(params[:id])
+    json Account.find(params[:id]).as_json(root: true)
+  end
+
+  get '/branches/:id/accounts' do
+    branch = Branch.where(branch_id: params[:id]).include_accounts.first
+    res = branch.as_json(root: true)
+    res['branch'].merge!(accounts: branch.accounts)
+    json res
   end
 
   get '/customers' do
