@@ -11,7 +11,7 @@ class Bank < Sinatra::Application
   end
 
   get '/accounts' do
-    json Account.all.include_customer_and_product_type.as_json(root: true)
+    json({ accounts: Account.all.include_customer_and_product_type })
   end
 
   get '/accounts/:id' do
