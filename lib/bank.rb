@@ -1,6 +1,8 @@
 require_relative './bank/models/account'
 require_relative './bank/models/branch'
+require_relative './bank/models/business'
 require_relative './bank/models/customer'
+require_relative './bank/models/individual'
 require_relative './bank/models/product'
 require_relative './bank/models/product_type'
 require_relative './bank/models/employee'

@@ -1,7 +1,7 @@
 class Account < ActiveRecord::Base
   self.table_name = "account"
 
-  scope :include_customer_and_product_type, -> { includes(:customer, :product => :product_type) }
+  scope :include_customer_and_product_type, -> { includes(customer: [:business, :individual], product: :product_type) }
 
   belongs_to :customer, :foreign_key => :cust_id
   belongs_to :product, :foreign_key => :product_cd
@@ -19,7 +19,24 @@ class Account < ActiveRecord::Base
         :status
       ],
       include: [
-        :customer,
+        customer: {
+          include: {
+            individual: {
+              only: [
+                :fname,
+                :lname,
+                :birth_date
+              ]
+            },
+            business: {
+              only: [
+                :name,
+                :state_id,
+                :incorp_date
+              ]
+            }
+          }
+        },
         product: {
           only: [
             :date_offered,
