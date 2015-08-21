@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'rake'
+gem 'bcrypt'
 gem 'pg', group: :production
 gem 'mysql2', group: [:development, :test]
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403065611) do
+ActiveRecord::Schema.define(version: 20150821211915) do
 
   create_table "account", primary_key: "account_id", force: :cascade do |t|
     t.string  "product_cd",         limit: 10, null: false
@@ -116,6 +116,15 @@ ActiveRecord::Schema.define(version: 20150403065611) do
   add_index "transaction", ["account_id"], name: "fk_t_account_id", using: :btree
   add_index "transaction", ["execution_branch_id"], name: "fk_exec_branch_id", using: :btree
   add_index "transaction", ["teller_emp_id"], name: "fk_teller_emp_id", using: :btree
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email",           limit: 255, default: "", null: false
+    t.string   "password_digest", limit: 255, default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
   add_foreign_key "account", "branch", column: "open_branch_id", primary_key: "branch_id", name: "fk_a_branch_id"
   add_foreign_key "account", "customer", column: "cust_id", primary_key: "cust_id", name: "fk_a_cust_id"
