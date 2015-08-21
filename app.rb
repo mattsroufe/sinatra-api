@@ -10,8 +10,13 @@ class Bank < Sinatra::Application
     response['Access-Control-Allow-Origin'] = '*'
   end
 
+  get '/' do
+    content_type 'text/html'
+    send_file 'public/index.html'
+  end
+
   get '/accounts' do
-    json({ accounts: Account.all.include_customer_and_product_type })
+    json accounts: Account.all.include_customer_and_product_type
   end
 
   get '/accounts/:id' do
@@ -40,7 +45,7 @@ class Bank < Sinatra::Application
       json customer
     else
       status 400
-      json({ errors: customer.errors.full_messages })
+      json errors: customer.errors.full_messages
     end
   end
 
