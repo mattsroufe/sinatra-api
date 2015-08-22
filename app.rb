@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'jwt'
-require 'byebug' unless ENV['RACK_ENV'] == 'production'
+require 'byebug' unless Sinatra::Base.production?
 require './lib/bank'
 
 class Bank < Sinatra::Application
@@ -18,33 +18,29 @@ class Bank < Sinatra::Application
     send_file 'public/index.html'
   end
 
+  get '/users/current' do
+    send_auth_response
+  end
+
   post '/signup' do
     user = User.new(email: params[:email], password: params[:password])
     if user.save
-      payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
-      response.set_cookie('access_token', {value: JWT.encode(payload, secret), :expires => Time.now + 24.hours, secure: production?, httponly: true})
-      json payload
+      send_auth_response
     else
       json errors: ['Invalid signup']
     end
   end
 
-  # curl -X POST 'localhost:5000/auth' -d "email=<email>&password=<password>" -H "Accept: application/json"
-  # curl -X POST 'localhost:5000/auth' -d '{"email": "<email>", "password": "<password>"}' -H "Accept: application/json" -H "Content-Type: application/json"
   post '/auth' do
-    user = User.find_by_email(params[:email])
-    if user && user.authenticate(params[:password])
-      payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
-      response.set_cookie('access_token', {value: JWT.encode(payload, secret), :expires => Time.now + 24.hours, secure: production?, httponly: true})
-      # json token: JWT.encode(payload, secret)
-      json payload
+    @current_user = User.find_by_email(params[:email])
+    if current_user && current_user.authenticate(params[:password])
+      send_auth_response
     else
       status 400
       json errors: ['Invalid credentials.']
     end
   end
 
-  # curl 'localhost:5000/accounts' -H "Accept: application/json" -H "Authorization: <token>" -H "Content-Type: application/json"
   get '/accounts' do
     json accounts: Account.all.include_customer_and_product_type
   end
@@ -88,6 +84,28 @@ class Bank < Sinatra::Application
       @current_user
     end
 
+    def send_auth_response
+      payload = {
+        sub:   current_user.id,
+        email: current_user.email,
+        iss:   'Diaminx',
+        iat:   Time.now.to_i,
+        exp:   (Time.now + 24.hours).to_i
+      }
+      response.set_cookie('access_token', {
+        value:    JWT.encode(payload, secret),
+        path:     '/',
+        expires:  Time.now + 24.hours,
+        secure:   Sinatra::Base.production?,
+        httponly: true
+      })
+      json payload
+    end
+
+    def secret
+      'secret'
+    end
+
     def json(obj)
       obj.to_json
     end
@@ -97,10 +115,6 @@ class Bank < Sinatra::Application
       params.each { |k, v| @params[k.to_sym] = v }
     end
 
-    def secret
-      'secret'
-    end
-
     def authenticate_user
       token = request.env['HTTP_COOKIE'].split('=').last
       decoded_token = JWT.decode(token, secret)
@@ -108,10 +122,6 @@ class Bank < Sinatra::Application
       @current_user = User.find(user_id)
     rescue
       halt 400, json(errors: ['Invalid token'])
-    end
-
-    def production?
-      ENV['RACK_ENV'] == 'production'
     end
   end
 end
