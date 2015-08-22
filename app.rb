@@ -23,7 +23,7 @@ class Bank < Sinatra::Application
     if user.save
       payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
       status 200
-      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: production?, httponly: true})
+      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: true, httponly: true})
     else
       json errors: ['Invalid signup']
     end
@@ -37,7 +37,7 @@ class Bank < Sinatra::Application
       payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
       # json token: JWT.encode(payload, secret)
       status 200
-      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: production?, httponly: true})
+      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: true, httponly: true})
     else
       status 400
       json errors: ['Invalid credentials.']
