@@ -23,8 +23,8 @@ class Bank < Sinatra::Application
   end
 
   post '/signup' do
-    user = User.new(email: params[:email], password: params[:password])
-    if user.save
+    @current_user = User.new(email: params[:email], password: params[:password])
+    if current_user.save
       send_auth_response
     else
       json errors: ['Invalid signup']
