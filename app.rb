@@ -22,8 +22,8 @@ class Bank < Sinatra::Application
     user = User.new(email: params[:email], password: params[:password])
     if user.save
       payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
-      status 200
-      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: true, httponly: true})
+      response.set_cookie('access_token', {value: JWT.encode(payload, secret), :expires => Time.now + 24.hours, secure: production?, httponly: true})
+      json payload
     else
       json errors: ['Invalid signup']
     end
@@ -35,9 +35,9 @@ class Bank < Sinatra::Application
     user = User.find_by_email(params[:email])
     if user && user.authenticate(params[:password])
       payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
+      response.set_cookie('access_token', {value: JWT.encode(payload, secret), :expires => Time.now + 24.hours, secure: production?, httponly: true})
       # json token: JWT.encode(payload, secret)
-      status 200
-      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: true, httponly: true})
+      json payload
     else
       status 400
       json errors: ['Invalid credentials.']
@@ -102,7 +102,7 @@ class Bank < Sinatra::Application
     end
 
     def authenticate_user
-      token = request.env['HTTP_AUTHORIZATION'].split(' ').last
+      token = request.env['HTTP_COOKIE'].split('=').last
       decoded_token = JWT.decode(token, secret)
       user_id = decoded_token[0]['sub']
       @current_user = User.find(user_id)
