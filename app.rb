@@ -10,7 +10,7 @@ class Bank < Sinatra::Application
     content_type 'application/json'
     response['Access-Control-Allow-Origin'] = '*'
     authenticate_user unless ['auth', nil].include? request.path_info.split('/')[1]
-    parse_request_body if request.env['CONTENT_TYPE'] == 'application/json'
+    parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
   end
 
   get '/' do
