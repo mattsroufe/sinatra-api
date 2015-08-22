@@ -1,12 +1,8 @@
 app = (function () {
   var init = function () {
-    fetch('/customers', {
-      method: 'get'
-    }).then(function(response) {
-      return response.json();
-    }).then(function(json) {
-      console.log(json); 
-    });
+    // document.getElementById("login-form").addEventListener('click', function (event) {
+    //   console.log('click');
+    // });
   };
 
   return {

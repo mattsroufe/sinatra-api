@@ -24,7 +24,8 @@ class Bank < Sinatra::Application
     user = User.find_by_email(params[:email])
     if user && user.authenticate(params[:password])
       payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
-      json token: JWT.encode(payload, secret)
+      # json token: JWT.encode(payload, secret)
+      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: production?, httponly: true})
     else
       status 400
       json errors: ['Invalid credentials.']
@@ -95,6 +96,10 @@ class Bank < Sinatra::Application
       @current_user = User.find(user_id)
     rescue
       halt 400, json(errors: ['Invalid token'])
+    end
+
+    def production?
+      ENV['RACK_ENV'] == 'production'
     end
   end
 end
