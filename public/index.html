@@ -9,20 +9,22 @@
     <div id="header">
       <span>BANK APP</span>
       <form id="login-form" action="/auth" method="post">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password">
+        <label for="login-email">Email</label>
+        <input id="login-email" name="login-email" type="email">
+        <label for="login-password">Password</label>
+        <input id="login-password" name="login-password" type="password">
         <input type="submit" value="Login">
       </form>
     </div>
     <div id="main">
       <h1>Sign-Up</h1>
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email"><br>
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password"><br>
-      <input type="submit" value="Register">
+      <form id="signup-form" action="/signup" method="post">
+        <label for="signup-email">Email</label>
+        <input id="signup-email" name="signup-email" type="email"><br>
+        <label for="signup-password">Password</label>
+        <input id="signup-password" name="signup-password" type="password"><br>
+        <input type="submit" value="Register">
+      </form>
     </div>
     <script>app.init()</script>
 </body>

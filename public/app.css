@@ -17,8 +17,11 @@ body {
 }
 
 #header #login-form {
-  font-size: 80%;
   float: right;
+}
+
+label {
+  font-size: 80%;
 }
 
 #header #login-form input {

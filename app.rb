@@ -9,13 +9,24 @@ class Bank < Sinatra::Application
   before do
     content_type 'application/json'
     response['Access-Control-Allow-Origin'] = '*'
-    authenticate_user unless ['auth', nil].include? request.path_info.split('/')[1]
+    authenticate_user unless ['auth', 'signup', nil].include? request.path_info.split('/')[1]
     parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
   end
 
   get '/' do
     content_type 'text/html'
     send_file 'public/index.html'
+  end
+
+  post '/signup' do
+    user = User.new(email: params[:email], password: params[:password])
+    if user.save
+      payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
+      status 200
+      response.set_cookie('token', {value: JWT.encode(payload, secret), secure: production?, httponly: true})
+    else
+      json errors: ['Invalid signup']
+    end
   end
 
   # curl -X POST 'localhost:5000/auth' -d "email=<email>&password=<password>" -H "Accept: application/json"
@@ -25,6 +36,7 @@ class Bank < Sinatra::Application
     if user && user.authenticate(params[:password])
       payload = {sub: user.id, iss: 'Diaminx', iat: Time.now.to_i, exp: (Time.now + 24.hours).to_i}
       # json token: JWT.encode(payload, secret)
+      status 200
       response.set_cookie('token', {value: JWT.encode(payload, secret), secure: production?, httponly: true})
     else
       status 400
