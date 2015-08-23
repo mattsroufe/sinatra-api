@@ -123,7 +123,7 @@ class Bank < Sinatra::Application
     end
 
     def authenticate_user
-      token = request.env['HTTP_COOKIE'].split('=').last
+      token = request.cookies['access_token']
       decoded_token = JWT.decode(token, secret)
       user_id = decoded_token[0]['sub']
       @current_user = User.find(user_id)
