@@ -8,9 +8,16 @@ class Bank < Sinatra::Application
 
   before do
     content_type 'application/json'
-    response['Access-Control-Allow-Origin'] = '*'
+    response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
+    response['Access-Control-Allow-Credentials'] = 'true'
     authenticate_user unless ['auth', 'signup', nil].include? request.path_info.split('/')[1]
     parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
+  end
+
+  options '*' do
+    content_type 'text/plain'
+    headers 'Access-Control-Allow-Headers' => 'Accept, Authorization, Content-Type',
+            'Access-Control-Allow-Methods' => 'GET, POST, PUT, PATCH, DELETE, OPTIONS, LINK, UNLINK'
   end
 
   get '/' do
