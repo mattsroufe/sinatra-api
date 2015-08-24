@@ -8,7 +8,7 @@ class Bank < Sinatra::Application
 
   before do
     content_type 'application/json'
-    response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
+    response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN'] || '*'
     response['Access-Control-Allow-Credentials'] = 'true'
     authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
     parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
@@ -39,8 +39,16 @@ class Bank < Sinatra::Application
   end
 
   post '/auth' do
-    @current_user = User.find_by_email(params[:email])
-    if current_user && current_user.authenticate(params[:password])
+    decoded_token = Net::HTTP.get URI('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + params[:id_token])
+    jwt = JSON.parse(decoded_token)
+    @current_user = User.find_by(email: jwt['email']) || User.create do |user|
+      user.email       = jwt['email']
+      user.name        = jwt['name']
+      user.given_name  = jwt['given_name']
+      user.family_name = jwt['family_name']
+    end
+
+    if current_user && current_user.valid?
       send_auth_response
     else
       status 400
