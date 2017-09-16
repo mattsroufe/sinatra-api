@@ -1,5 +1,13 @@
 
-A basic API using JSON Web Tokens for authentication.
+# A basic API using JSON Web Tokens for authentication.
+
+```
+bundle install
+```
+
+```
+rackup config.ru
+```
 
 ```
 curl -v -X POST 'localhost:5000/auth' -d "email=<email>&password=<password>" -H "Accept: application/json"
