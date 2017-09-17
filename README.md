@@ -4,6 +4,8 @@
 ```
 bundle install
 ```
+bundle exec rake db:setup
+```
 
 ```
 rackup config.ru

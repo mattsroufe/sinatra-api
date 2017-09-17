@@ -1,20 +1,21 @@
 default: &default
+  username: root
   encoding: utf8
   pool: 5
 
 development:
   <<: *default
   adapter: mysql2
-  database: bank
+  database: employees
 
 test:
   <<: *default
   adapter: mysql2
-  database: bank_test
+  database: employees_test
 
 production:
   <<: *default
   adapter: postgresql
-  database: bank_production
-  username: bank
-  password: <%= ENV['BANK_DATABASE_PASSWORD'] %>
+  database: employees_production
+  username: employees
+  password: <%= ENV['EMPLOYEES_DATABASE_PASSWORD'] %>

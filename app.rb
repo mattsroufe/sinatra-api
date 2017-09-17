@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'jwt'
+require 'net/http'
 require 'byebug' unless Sinatra::Base.production?
 require './lib/bank'
 
@@ -10,7 +11,7 @@ class Bank < Sinatra::Application
     content_type 'application/json'
     response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN'] || '*'
     response['Access-Control-Allow-Credentials'] = 'true'
-    authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
+    # authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
     parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
   end
 
@@ -30,7 +31,7 @@ class Bank < Sinatra::Application
   end
 
   post '/signup' do
-    @current_user = User.new(email: params[:email], password: params[:password])
+    @current_user = User.new(email: params[:email])
     if current_user.save
       send_auth_response
     else
@@ -91,7 +92,7 @@ class Bank < Sinatra::Application
   end
 
   get '/employees' do
-    json Employee.all
+    json Employee.limit(10)
   end
 
   helpers do
@@ -132,11 +133,11 @@ class Bank < Sinatra::Application
 
     def authenticate_user
       token = request.cookies['access_token']
-      decoded_token = JWT.decode(token, secret)
+      decoded_token = JWT.decode(token, secret, true, algorithm: 'HS256')
       user_id = decoded_token[0]['sub']
       @current_user = User.find(user_id)
     rescue
-      halt 400, json(errors: ['Invalid token'])
+      halt 400, json(errors: ['Invalid token'], token: decoded_token)
     end
   end
 end
