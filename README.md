@@ -12,6 +12,7 @@ mysql employees
 ```
 bundle install
 ```
+```
 bundle exec rake db:setup
 ```
 
