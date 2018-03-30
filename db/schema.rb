@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20180330220828) do
 
   create_table "departments", primary_key: "dept_no", id: :string, limit: 4, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "dept_name", limit: 40, null: false
@@ -41,6 +41,18 @@ ActiveRecord::Schema.define(version: 0) do
     t.date "hire_date", null: false
   end
 
+  create_table "expected_values", primary_key: "table_name", id: :string, limit: 30, force: :cascade, options: "ENGINE=MEMORY DEFAULT CHARSET=utf8" do |t|
+    t.integer "recs", null: false
+    t.string "crc_sha", limit: 100, null: false
+    t.string "crc_md5", limit: 100, null: false
+  end
+
+  create_table "found_values", primary_key: "table_name", id: :string, limit: 30, force: :cascade, options: "ENGINE=MEMORY DEFAULT CHARSET=utf8" do |t|
+    t.integer "recs", null: false
+    t.string "crc_sha", limit: 100, null: false
+    t.string "crc_md5", limit: 100, null: false
+  end
+
   create_table "salaries", primary_key: ["emp_no", "from_date"], force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "emp_no", null: false
     t.integer "salary", null: false
@@ -53,6 +65,11 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "title", limit: 50, null: false
     t.date "from_date", null: false
     t.date "to_date"
+  end
+
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "username"
+    t.index ["username"], name: "index_users_on_username"
   end
 
   add_foreign_key "dept_emp", "departments", column: "dept_no", primary_key: "dept_no", name: "dept_emp_ibfk_2", on_delete: :cascade

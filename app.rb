@@ -140,4 +140,6 @@ class Bank < Sinatra::Application
       halt 400, json(errors: ['Invalid token'], token: decoded_token)
     end
   end
+
+  run! if app_file == $0
 end
