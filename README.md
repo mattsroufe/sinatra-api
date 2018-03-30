@@ -3,7 +3,7 @@
 
 Get the employees database:
 ```
-gile clone git@github.com:datacharmer/test_db.git
+git clone git@github.com:datacharmer/test_db.git
 cd test_db
 mysql < employees.sql
 mysql -t < test_employees_md5.sql
