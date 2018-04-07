@@ -1,17 +1,13 @@
 class EmployeeSerializer
+  include FastJsonapi::ObjectSerializer
+  attributes :first_name, :last_name
+
   def self.for_user(user)
     if user.username == 'admin'
       AdminSerializer
     else
-      BaseSerializer
+      self
     end
-  end
-
-  class BaseSerializer
-    include FastJsonapi::ObjectSerializer
-    set_type :employee
-
-    attributes :first_name, :last_name
   end
 
   class AdminSerializer

@@ -86,8 +86,10 @@ class Bank < Sinatra::Application
 
   get '/employees' do
     options = {}
+    # EmployeesQuery.for_user(current_user) do |results, count|
     movies = EmployeesQuery.for_user(current_user)
-    EmployeeSerializer.for_user(current_user).new(movies, options).serialized_json
+    serializer_klass = EmployeeSerializer.for_user(current_user)
+    serializer_klass.new(movies, options).serialized_json
   end
 
   helpers do
