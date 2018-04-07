@@ -10,7 +10,7 @@ gem 'jwt'
 gem 'mysql2'
 gem 'fast_jsonapi'
 
-group :development do
+group :development, :test do
   gem 'byebug'
   gem 'tux'
 end
