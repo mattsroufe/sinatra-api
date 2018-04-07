@@ -1,4 +1,4 @@
-require_relative './../spec_helper'
+require_relative './../test_helper'
 
 describe "GET /accounts" do
   it "renders all accounts" do

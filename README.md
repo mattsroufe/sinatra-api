@@ -33,3 +33,9 @@ curl 'localhost:5000/accounts' --cookie "access_token=<token>" -H "Accept: appli
 ```
 curl -v 'localhost:4567/employees' -H "Token: admin" -H "Accept: application/json" | python -m json.tool
 ```
+Testing
+```
+bundle exec rake db:schema:load RACK_ENV=test
+ruby -Ilib:test test/endpoints/employees_test.rb
+bundle exec rake test 
+```

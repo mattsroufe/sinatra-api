@@ -9,6 +9,8 @@ ActiveRecord::Base.establish_connection(db_options['test'])
 
 include Rack::Test::Methods
 
+User.find_or_create_by!(username: 'test')
+
 def app
   Bank
 end

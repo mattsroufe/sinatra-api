@@ -9,7 +9,7 @@ gem 'bcrypt'
 gem 'jwt'
 gem 'pg'
 
-group :development do
+group :development, :test do
   gem 'byebug'
   gem 'tux'
 end
