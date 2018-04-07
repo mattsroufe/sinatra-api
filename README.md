@@ -30,3 +30,6 @@ curl -v -X POST 'localhost:5000/auth' -d '{"email": "<email>", "password": "<pas
 ```
 curl 'localhost:5000/accounts' --cookie "access_token=<token>" -H "Accept: application/json"
 ```
+```
+curl -v 'localhost:4567/employees' -H "Token: admin" -H "Accept: application/json" | python -m json.tool
+```
