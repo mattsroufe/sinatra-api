@@ -8,6 +8,7 @@ gem 'rake'
 gem 'bcrypt'
 gem 'jwt'
 gem 'mysql2'
+gem 'fast_jsonapi'
 
 group :development do
   gem 'byebug'
