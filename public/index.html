@@ -10,9 +10,9 @@
       <span>BANK APP</span>
       <form id="login-form" action="/auth" method="post">
         <label for="login-email">Email</label>
-        <input id="login-email" name="login-email" type="email">
+        <input id="login-email" name="login-email" type="email" autocomplete="current email">
         <label for="login-password">Password</label>
-        <input id="login-password" name="login-password" type="password">
+        <input id="login-password" name="login-password" type="password" autocomplete="current-password">
         <input type="submit" value="Login">
       </form>
     </div>
@@ -20,9 +20,9 @@
       <h1>Sign-Up</h1>
       <form id="signup-form" action="/signup" method="post">
         <label for="signup-email">Email</label>
-        <input id="signup-email" name="signup-email" type="email"><br>
+        <input id="signup-email" name="signup-email" type="email" autocomplete="username email"><br>
         <label for="signup-password">Password</label>
-        <input id="signup-password" name="signup-password" type="password"><br>
+        <input id="signup-password" name="signup-password" type="password" autocomplete="new-password"><br>
         <input type="submit" value="Register">
       </form>
     </div>
