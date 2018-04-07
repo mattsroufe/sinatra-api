@@ -10,6 +10,7 @@ ActiveRecord::Base.establish_connection(db_options['test'])
 include Rack::Test::Methods
 
 User.find_or_create_by!(username: 'test')
+Employee.find_or_create_by!(emp_no: 1, birth_date: '1980-12-06', gender: 'M', hire_date: '2018-06-30', first_name: 'Test', last_name: 'Employee')
 
 def app
   Bank
