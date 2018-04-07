@@ -2,11 +2,12 @@ class EmployeeSerializer
   include FastJsonapi::ObjectSerializer
   attributes :first_name, :last_name
 
-  def self.for_user(user)
+  def self.build(user, options = {})
+    employee = Employee.find(options[:id])
     if user.username == 'admin'
-      AdminEmployeeSerializer
+      AdminEmployeeSerializer.new(employee, options)
     else
-      self
+      new(employee, options)
     end
   end
 end

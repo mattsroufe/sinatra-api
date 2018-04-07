@@ -1,4 +1,4 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'jwt'
 require 'net/http'
@@ -84,12 +84,12 @@ class Bank < Sinatra::Application
     end
   end
 
+  get '/employees/:id' do
+    EmployeeSerializer.build(current_user, options).serialized_json
+  end
+
   get '/employees' do
-    options = {}
-    # EmployeesQuery.for_user(current_user) do |results, count|
-    movies = EmployeesQuery.for_user(current_user)
-    serializer_klass = EmployeeSerializer.for_user(current_user)
-    serializer_klass.new(movies, options).serialized_json
+    EmployeesSerializer.build(current_user, options).serialized_json
   end
 
   helpers do
@@ -97,10 +97,13 @@ class Bank < Sinatra::Application
       @current_user
     end
 
+    def options
+      params
+    end
+
     def send_auth_response
       payload = {
-        sub:   current_user.id,
-        username: current_user.username,
+        sub:   current_user.username,
         iss:   'Diaminx',
         iat:   Time.now.to_i,
         exp:   (Time.now + 24.hours).to_i
