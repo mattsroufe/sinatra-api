@@ -89,7 +89,7 @@ class Bank < Sinatra::Application
   end
 
   get '/employees' do
-    EmployeesSerializer.build(current_user, options).serialized_json
+    EmployeeSerializer.build(current_user, options).serialized_json
   end
 
   helpers do
