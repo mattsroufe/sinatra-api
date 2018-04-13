@@ -3,11 +3,18 @@ class EmployeeSerializer
   attributes :first_name, :last_name
 
   def self.build(user, options = {})
-    employee = Employee.find(options[:id])
     if user.username == 'admin'
-      AdminEmployeeSerializer.new(employee, options)
+      AdminEmployeeSerializer.new(query(options), options)
     else
-      new(employee, options)
+      new(query(options), options)
+    end
+  end
+
+  def self.query(params)
+    if params[:id]
+      Employee.find(params[:id])
+    else
+      Employee.limit(10)
     end
   end
 end
