@@ -1,4 +1,4 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'jwt'
 require 'net/http'
@@ -11,7 +11,7 @@ class Bank < Sinatra::Application
     content_type 'application/json'
     response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN'] || '*'
     response['Access-Control-Allow-Credentials'] = 'true'
-    # authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
+    authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
     parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
   end
 
@@ -40,14 +40,7 @@ class Bank < Sinatra::Application
   end
 
   post '/auth' do
-    decoded_token = Net::HTTP.get URI('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + params[:id_token])
-    jwt = JSON.parse(decoded_token)
-    @current_user = User.find_by(email: jwt['email']) || User.create do |user|
-      user.email       = jwt['email']
-      user.name        = jwt['name']
-      user.given_name  = jwt['given_name']
-      user.family_name = jwt['family_name']
-    end
+    @current_user = User.find_by(username: params[:username])
 
     if current_user && current_user.valid?
       send_auth_response
@@ -91,8 +84,12 @@ class Bank < Sinatra::Application
     end
   end
 
+  get '/employees/:id' do
+    EmployeeSerializer.build(current_user, options).serialized_json
+  end
+
   get '/employees' do
-    json Employee.limit(10)
+    EmployeeSerializer.build(current_user, options).serialized_json
   end
 
   helpers do
@@ -100,10 +97,13 @@ class Bank < Sinatra::Application
       @current_user
     end
 
+    def options
+      params
+    end
+
     def send_auth_response
       payload = {
-        sub:   current_user.id,
-        email: current_user.email,
+        sub:   current_user.username,
         iss:   'Diaminx',
         iat:   Time.now.to_i,
         exp:   (Time.now + 24.hours).to_i
@@ -115,7 +115,7 @@ class Bank < Sinatra::Application
         secure:   Sinatra::Base.production?,
         httponly: true
       })
-      json payload
+      json JWT.encode(payload, secret)
     end
 
     def secret
@@ -132,12 +132,9 @@ class Bank < Sinatra::Application
     end
 
     def authenticate_user
-      token = request.cookies['access_token']
-      decoded_token = JWT.decode(token, secret, true, algorithm: 'HS256')
-      user_id = decoded_token[0]['sub']
-      @current_user = User.find(user_id)
-    rescue
-      halt 400, json(errors: ['Invalid token'], token: decoded_token)
+      token = request.env['HTTP_TOKEN']
+      @current_user = User.find_by(username: token)
+      halt 400, json(errors: ['Invalid token']) unless @current_user
     end
   end
 
