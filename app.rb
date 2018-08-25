@@ -11,7 +11,7 @@ class Bank < Sinatra::Application
     content_type 'application/json'
     response['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN'] || '*'
     response['Access-Control-Allow-Credentials'] = 'true'
-    authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
+    # authenticate_user unless ['auth', 'signup', nil].include?(request.path_info.split('/')[-1]) || request.options?
     parse_request_body if request.env['CONTENT_TYPE'] =~ /application\/json/
   end
 
@@ -89,7 +89,8 @@ class Bank < Sinatra::Application
   end
 
   get '/employees' do
-    EmployeeSerializer.build(current_user, options).serialized_json
+    # EmployeeSerializer.build(current_user, options).serialized_json
+    json EmployeesQuery.new.select(:emp_no, :full_name).limit(10)
   end
 
   helpers do
