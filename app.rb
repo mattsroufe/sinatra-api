@@ -90,7 +90,7 @@ class Bank < Sinatra::Application
 
   get '/employees' do
     # EmployeeSerializer.build(current_user, options).serialized_json
-    json EmployeesQuery.new.select(:emp_no, :full_name).limit(10)
+    json EmployeesQuery.new.select(:emp_no, :full_name, :current_department, :current_department_manager).where('departments.dept_name' => 'Customer Service').order('current_department').limit(10)
   end
 
   helpers do
