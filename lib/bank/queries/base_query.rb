@@ -44,7 +44,7 @@ class BaseQuery
   end
 
   def join(join_sql)
-    @joins.push("LEFT JOIN #{join_sql}")
+    @joins.push(join_sql)
   end
 
   def joins
