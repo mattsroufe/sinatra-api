@@ -1,58 +1,8 @@
-class BaseQuery
-  def initialize
-    @joins = []
-  end
-
-  def self.table_name
-    @name
-  end
-
-  def self.model
-    @model
-  end
-
-  def self.model=(name)
-    @model = name
-  end
-
-  def self.table_name=(name)
-    @name = name
-  end
-
-  def self.base_attributes
-    @attributes
-  end
-
-  def self.attributes(*attributes)
-    @attributes = attributes
-  end
-
-  def select(*attributes)
-    select_sql = attributes.map do |attribute|
-      if public_methods.include? attribute
-        "#{send(attribute)} AS #{attribute}"
-      else
-        "#{self.class.table_name}.#{attribute}"
-      end
-    end
-    self.class.model.constantize.select(select_sql).from(self.class.table_name).joins(joins.uniq.join(' '))
-  end
-
-  def all
-    select(*self.class.base_attributes)
-  end
-
-  def join(join_sql)
-    @joins.push("LEFT JOIN #{join_sql}")
-  end
-
-  def joins
-    @joins
-  end
-end
+require_relative './base_query'
+require_relative './../models/employee'
 
 class EmployeesQuery < BaseQuery
-  self.model = 'Employee'
+  self.model = Employee
   self.table_name = 'employees'
   
   attributes :emp_no, :birth_date, :first_name, :last_name, :gender, :hire_date
