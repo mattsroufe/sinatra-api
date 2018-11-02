@@ -51,11 +51,3 @@ class BaseQuery
     @joins
   end
 end
-
-# describe CrewQuerySpec
-#   it "works" do
-#     expect(CrewQuery.new(current_user).select(:first_name, :last_name, :full_name).limit(10)).to eq(
-
-#     )
-#   end
-# end
