@@ -92,7 +92,11 @@ class Bank < Sinatra::Application
   get '/employees' do
     # EmployeeSerializer.build(current_user, options).serialized_json
     if params['filter']
-      json EmployeesQuery.new.select(:emp_no, :full_name, :current_department, :current_department_manager).where("#{params['filter'].keys.first} = ?", params['filter'].values.first).order('current_department').limit(10)
+      query = EmployeesQuery.new.select(:emp_no, :full_name, :current_department, :current_department_manager)
+      params['filter'].each do |key, value|
+        query = query.where("#{key} = ?", value)
+      end
+      json query.order('current_department').limit(10)
     else
       json EmployeesQuery.new.select(:emp_no, :full_name, :current_department, :current_department_manager).order('current_department').limit(10)
     end
