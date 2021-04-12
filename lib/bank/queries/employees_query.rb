@@ -10,16 +10,22 @@ class EmployeesQuery < BaseQuery
     "CONCAT(employee.first_name, ' ', employee.last_name)"
   end
 
-  def current_department
-    # join 'JOIN current_dept_emp ON employees.emp_no = current_dept_emp.emp_no'
-    # join 'JOIN departments ON current_dept_emp.dept_no = departments.dept_no'
-    "'departments.dept_name'"
+  def current_department_name
+    join 'JOIN department_employee ON department_employee.employee_id = employee.id AND department_employee.to_date > CURRENT_DATE' do
+      join 'JOIN department ON department.id = department_employee.department_id' do
+        'department.dept_name'
+      end
+    end
   end
 
-  def current_department_name
-    join 'JOIN department_employee ON department_employee.employee_id = employee.id AND department_employee.to_date > CURRENT_DATE'
-    join 'JOIN department ON department.id = department_employee.department_id'
-    'department.dept_name'
+  def current_manager_name
+    join 'JOIN department_employee ON department_employee.employee_id = employee.id AND department_employee.to_date > CURRENT_DATE' do
+      join 'JOIN department_manager ON department_manager.department_id = department.id' do
+        join 'JOIN employee e ON employee.id = department_employee.employee_id AND department_manager.to_date > CURRENT_DATE' do
+          "CONCAT(e.first_name, ' ', e.last_name)"
+        end
+      end
+    end
   end
 
   def current_salary

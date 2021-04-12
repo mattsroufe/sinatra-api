@@ -35,8 +35,9 @@ class BaseQuery
     select(*self.class.base_attributes)
   end
 
-  def join(join_sql)
+  def join(join_sql, &block)
     @joins.push(join_sql)
+    yield self if block_given?
   end
 
   def joins
