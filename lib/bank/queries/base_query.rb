@@ -3,20 +3,12 @@ class BaseQuery
     @joins = []
   end
 
-  def self.table_name
-    @name
-  end
-
   def self.model
     @model
   end
 
   def self.model=(klass)
     @model = klass
-  end
-
-  def self.table_name=(name)
-    @name = name
   end
 
   def self.base_attributes
@@ -32,10 +24,10 @@ class BaseQuery
       if public_methods.include? attribute
         "#{send(attribute)} AS #{attribute}"
       else
-        "#{self.class.table_name}.#{attribute}"
+        "#{self.class.model.table_name}.#{attribute}"
       end
     end
-    sql = self.class.model.select(select_sql).from(self.class.table_name).joins(joins.uniq.join(' ')).to_sql
+    sql = self.class.model.select(select_sql).from(self.class.model.table_name).joins(joins.uniq.join(' ')).to_sql
     self.class.model.select('*').from("(#{sql}) s")
   end
 

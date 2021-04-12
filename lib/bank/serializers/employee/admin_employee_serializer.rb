@@ -1,6 +1,6 @@
 class AdminEmployeeSerializer
-  include FastJsonapi::ObjectSerializer
-  set_type :employee
+  # include FastJsonapi::ObjectSerializer
+  # set_type :employee
 
-  attributes :birth_date, :first_name, :gender, :hire_date, :last_name
+  # attributes :birth_date, :first_name, :gender, :hire_date, :last_name
 end

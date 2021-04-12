@@ -98,7 +98,9 @@ class Bank < Sinatra::Application
       end
       json query.order('current_department').limit(10)
     else
-      json EmployeesQuery.new.select(:emp_no, :full_name, :current_department, :current_department_manager).order('current_department').limit(10)
+      query = EmployeesQuery.new.select(:id, :birth_date, :last_name, :full_name, :gender, :hire_date, :current_department_name).where("last_name = ?", 'Facello').where("current_department_name = ?", "Development").order("hire_date DESC").limit(10)
+      puts query.explain
+      json query
     end
       # {"filter"=>{"current_department"=>"Customer Service"}}
   end
