@@ -1,4 +1,4 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'jwt'
 require 'net/http'

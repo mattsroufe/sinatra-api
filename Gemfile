@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.5.1'
+ruby '2.7.1'
 
 gem 'sinatra'
 gem 'activerecord'
@@ -7,7 +7,7 @@ gem 'sinatra-activerecord'
 gem 'rake'
 gem 'bcrypt'
 gem 'jwt'
-gem 'mysql2'
+gem 'pg'
 
 group :development do
   gem 'byebug'
